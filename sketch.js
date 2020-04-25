@@ -16,7 +16,9 @@ function setup() {
 
 function draw() {
     // TODO: Make this more sensitive
+    // Use mouseReleased function and move functionality into cell class
     if (mouseIsPressed) {
+        // Find out if the % 20 is event neccessary
         var clickedOn = grid[floor(mouseX / 20) % 20][floor((mouseY - 20) / 20) % 20];
 
         if (mouseButton === CENTER) {
@@ -50,6 +52,7 @@ function draw() {
             return;
         }
 
+        // FIXME: Stop flashing flag bug
         if (mouseButton === RIGHT) {
             // Flag
             clickedOn.isFlagged = !clickedOn.isFlagged;
