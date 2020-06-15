@@ -9,20 +9,24 @@ class Cell {
         this.x = x;
         this.y = y;
         this.pxX = x * cellSize;
-        this.pxY = y * cellSize + cellSize;
+        this.pxY = y * cellSize + topBarHeight;
     }
 
     show() {
-        // TODO: Flag and mine textures
         if (this.isRevealed) {
             if (this.isMine) {
+                // Mine
                 fill("red");
                 rect(this.pxX, this.pxY, cellSize, cellSize);
+                fill("black");
+                ellipse(this.pxX + cellSize / 2, this.pxY + cellSize / 2, cellSize * 0.6);
             } else {
+                // Empty
                 fill(175);
                 rect(this.pxX, this.pxY, cellSize, cellSize);
                 fill(0);
                 if (this.neighboringMines > 0) {
+                    // Number
                     switch (this.neighboringMines) {
                         case 1:
                             fill("blue");
@@ -48,12 +52,15 @@ class Cell {
                 }
             }
         } else {
-            if (this.isFlagged) {
-                fill("orange");
-            } else {
-                fill(255);
-            }
+            // Unrevealed
+            fill(255);
             rect(this.pxX, this.pxY, cellSize, cellSize);
+            if (this.isFlagged) {
+                // Flag
+                line(this.pxX + cellSize * 0.4, this.pxY + cellSize * 0.15, this.pxX + cellSize * 0.4, this.pxY + cellSize * 0.8);
+                fill("orange");
+                triangle(this.pxX + cellSize * 0.4, this.pxY + cellSize * 0.2, this.pxX + cellSize * 0.4, this.pxY + cellSize * 0.6, this.pxX + cellSize * 0.9, this.pxY + cellSize * 0.4);
+            }
         }
     }
 
@@ -85,10 +92,10 @@ class Cell {
         // Reveal neighboring tiles which are not flagged
 
         // There must be neighboring tiles to reveal
-        if (this.neighboringMines = 0) return;
+        if ((this.neighboringMines = 0)) return;
 
         // There must be the same amounts of neighboring flags and mines
-        let neighboringFlags = 0
+        let neighboringFlags = 0;
 
         loopNeighbors(this.x, this.y, (x, y) => {
             if (grid[x][y].isFlagged) {
