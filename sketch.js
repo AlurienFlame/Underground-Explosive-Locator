@@ -149,6 +149,8 @@ function plantMines() {
 function checkWinCondition() {
     var won = true;
     loopGrid((x, y) => {
+        // TODO: Change this so that you can win winthout flagging
+        // if !isMine && !isRevealed - all tiles must be revealed except mines
         if (grid[x][y].isMine && !grid[x][y].isFlagged) {
             won = false;
         }
