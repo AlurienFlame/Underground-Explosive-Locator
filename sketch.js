@@ -8,6 +8,8 @@ const percentageMines = 0.2;
 const numMines = percentageMines * gridWidth * gridHeight;
 let moves = 0;
 let gameIsOver = false;
+let timerValue = 0;
+let timerDisplay = 0;
 
 function setup() {
     createCanvas(800, 600);
@@ -17,7 +19,6 @@ function setup() {
     });
 }
 
-// TODO: Track time
 function draw() {
     background(220);
     loopGrid((x, y) => {
@@ -28,10 +29,21 @@ function draw() {
     fill(0);
     textSize(12);
     text(`Moves: ${moves}`, 5, topBarHeight - 5);
+
+    // Timer
+    timerValue += deltaTime;
+    timerDisplay = floor(timerValue / 1000);
+    if (timerDisplay > 60) {
+        // Display minutes
+        mins = floor(timerDisplay / 60)
+        secs = timerDisplay % 60;
+        secsstr = (secs < 10 ? '0' : '') + secs
+        timerDisplay = `${mins}:${secsstr}`
+    }
+    text(timerDisplay, width / 2 - textWidth(timerDisplay) / 2, topBarHeight - 5);
 }
 
 function mouseReleased() {
-
     // Don't click outside of game
     if (mouseX > gridWidth * cellSize || mouseX < 0) return;
     if (mouseY > gridHeight * cellSize + topBarHeight || mouseY < topBarHeight) return;
@@ -131,7 +143,7 @@ function checkWinCondition() {
     });
     if (won) {
         gameOver();
-        alert("You win!");
+        alert(`You win!\nTime: ${timerDisplay}`);
     }
 }
 

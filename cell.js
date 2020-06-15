@@ -124,7 +124,7 @@ class Cell {
                 grid[x][y].reveal();
                 if (grid[x][y].isMine) {
                     gameOver();
-                    alert("You lose!");
+                    alert(`You lose!\nTime: ${timerDisplay}`);
                 }
             }
         });
@@ -155,7 +155,7 @@ class Cell {
 
         if (this.isMine) {
             gameOver();
-            alert("You lose!");
+            alert(`You lose!\nTime: ${timerDisplay}`);
             return;
         }
 
