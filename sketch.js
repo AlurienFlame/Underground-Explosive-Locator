@@ -17,6 +17,7 @@ function setup() {
     });
 }
 
+// TODO: Track time
 function draw() {
     background(220);
     loopGrid((x, y) => {
@@ -41,7 +42,6 @@ function mouseReleased() {
     // Calculate which cell was clicked on from mouse co-ordinates
     var clickedOn = grid[floor(mouseX / cellSize)][floor((mouseY - topBarHeight) / cellSize)];
 
-    // FIXME: Behaviour inconsistent with expectations
     if (mouseButton === CENTER) {
         clickedOn.onMouseMiddle();
     }

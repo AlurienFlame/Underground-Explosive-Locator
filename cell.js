@@ -58,8 +58,6 @@ class Cell {
     }
 
     reveal() {
-        // TODO: Set up a system so this is calculated when you make the first move,
-        // rather than every single time a mine is revealed
         this.countNeighboringMines();
         this.isRevealed = true;
 
@@ -84,8 +82,23 @@ class Cell {
     }
 
     onMouseMiddle() {
-        // You can only middle click if the clicked cell or
-        // at least one cell neighboring it is empty
+        // Reveal neighboring tiles which are not flagged
+
+        // There must be neighboring tiles to reveal
+        if (this.neighboringMines = 0) return;
+
+        // There must be the same amounts of neighboring flags and mines
+        let neighboringFlags = 0
+
+        loopNeighbors(this.x, this.y, (x, y) => {
+            if (grid[x][y].isFlagged) {
+                neighboringFlags++;
+            }
+        });
+
+        if (neighboringFlags != this.neighboringMines) return;
+
+        // At least one neighboring cell must be revealed
         let canMiddleClick = false;
 
         if (grid[this.x][this.y].isRevealed) canMiddleClick = true;
