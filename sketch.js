@@ -35,21 +35,23 @@ function draw() {
     timerDisplay = floor(timerValue / 1000);
     if (timerDisplay > 60) {
         // Display minutes
-        mins = floor(timerDisplay / 60)
+        mins = floor(timerDisplay / 60);
         secs = timerDisplay % 60;
-        secsstr = (secs < 10 ? '0' : '') + secs
-        timerDisplay = `${mins}:${secsstr}`
+        secsstr = (secs < 10 ? "0" : "") + secs;
+        timerDisplay = `${mins}:${secsstr}`;
     }
     text(timerDisplay, width / 2 - textWidth(timerDisplay) / 2, topBarHeight - 5);
 }
 
 function mousePressed() {
     clickedOn = mouseToGridCoords();
+    if (!clickedOn) return;
     clickedOn.mouseHeld = true;
 }
 
 function mouseReleased() {
     clickedOn = mouseToGridCoords();
+    if (!clickedOn) return;
     clickedOn.mouseHeld = false;
 
     if (mouseButton === CENTER) {
