@@ -4,9 +4,9 @@ const topBarHeight = cellSize;
 const gridWidth = 40;
 const gridHeight = 30 - 1; // -1 for the top-bar
 const grid = make2DGrid(gridWidth);
-// TODO: Make numMines a percentage
-const numMines = 70;
-let move = 0;
+const percentageMines = 0.05;
+const numMines = percentageMines * gridWidth * gridHeight;
+let moves = 0;
 let gameIsOver = false;
 
 function setup() {
@@ -18,78 +18,6 @@ function setup() {
 }
 
 function draw() {
-    // TODO: Make this more sensitive
-    // Use mouseReleased function and move functionality into cell class
-    if (mouseIsPressed) {
-
-        // Don't click outside of game
-        if (mouseX > gridWidth * cellSize || mouseX < 0) return;
-        if (mouseY > gridHeight * cellSize + topBarHeight || mouseY < topBarHeight) return;
-
-        // FIXME: Stop using magic numbers, it's breaking it.
-        var clickedOn = grid[floor(mouseX / cellSize)][floor((mouseY - topBarHeight) / cellSize)];
-
-        if (mouseButton === CENTER) {
-            var canMiddleClick;
-            var justLost;
-
-            loopNeighbors(clickedOn.x, clickedOn.y, (x, y) => {
-                if (grid[x][y].isRevealed) {
-                    canMiddleClick = true;
-                }
-            });
-
-            if (canMiddleClick) {
-                loopNeighbors(clickedOn.x, clickedOn.y, (x, y) => {
-                    if (!grid[x][y].isFlagged) {
-                        grid[x][y].reveal();
-                    }
-                    if (grid[x][y].isMine) {
-                        justLost = true;
-                    }
-                });
-            }
-
-            if (justLost) {
-                gameOver();
-                alert("You lose!");
-            }
-        }
-
-        if (clickedOn.isRevealed || gameIsOver) {
-            return;
-        }
-
-        // FIXME: Stop flashing flag bug
-        if (mouseButton === RIGHT) {
-            // Flag
-            clickedOn.isFlagged = !clickedOn.isFlagged;
-            if (clickedOn.isMine) {
-                checkWinCondition();
-            }
-        }
-
-        if (mouseButton === LEFT) {
-            // Reveal
-            move++;
-            if (move == 1) {
-                clickedOn.mustNotBeMine = true;
-                loopNeighbors(clickedOn.x, clickedOn.y, (x, y) => {
-                    grid[x][y].mustNotBeMine = true;
-                });
-                plantMines(clickedOn);
-            }
-
-            if (clickedOn.isMine) {
-                gameOver();
-                alert("You lose!");
-                return;
-            }
-
-            clickedOn.reveal();
-        }
-    }
-
     background(220);
     loopGrid((x, y) => {
         grid[x][y].show();
@@ -98,7 +26,36 @@ function draw() {
     rect(0, 0, gridWidth * cellSize, topBarHeight);
     fill(0);
     textSize(12);
-    text(`Moves: ${move}`, 5, topBarHeight - 5);
+    text(`Moves: ${moves}`, 5, topBarHeight - 5);
+}
+
+function mouseReleased() {
+
+    // Don't click outside of game
+    if (mouseX > gridWidth * cellSize || mouseX < 0) return;
+    if (mouseY > gridHeight * cellSize + topBarHeight || mouseY < topBarHeight) return;
+
+    // Don't click if game is over
+    if (gameIsOver) return;
+
+    // Calculate which cell was clicked on from mouse co-ordinates
+    var clickedOn = grid[floor(mouseX / cellSize)][floor((mouseY - topBarHeight) / cellSize)];
+
+    // FIXME: Behaviour inconsistent with expectations
+    if (mouseButton === CENTER) {
+        clickedOn.onMouseMiddle();
+    }
+
+    // You can't reveal or place flags on an already revealed tile
+    if (clickedOn.isRevealed) return;
+
+    if (mouseButton === RIGHT) {
+        clickedOn.onMouseRight();
+    }
+
+    if (mouseButton === LEFT) {
+        clickedOn.onMouseLeft();
+    }
 }
 
 function make2DGrid(arrayWidth) {
@@ -133,8 +90,9 @@ function loopNeighbors(x, y, callback) {
     }
 }
 
-function plantMines(clickedOn) {
-    if (numMines > gridWidth * gridHeight - 1) {
+function plantMines() {
+    if (numMines > gridWidth * gridHeight - 9) {
+        // -9 for cells that have been flagged as mustNotBeMine
         console.error("Trying to place more mines than spaces on the grid!");
         return;
     }
@@ -184,4 +142,5 @@ function gameOver() {
     });
 }
 
+// Disable right click context menu
 document.addEventListener("contextmenu", (event) => event.preventDefault());
