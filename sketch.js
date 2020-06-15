@@ -43,16 +43,14 @@ function draw() {
     text(timerDisplay, width / 2 - textWidth(timerDisplay) / 2, topBarHeight - 5);
 }
 
+function mousePressed() {
+    clickedOn = mouseToGridCoords();
+    clickedOn.mouseHeld = true;
+}
+
 function mouseReleased() {
-    // Don't click outside of game
-    if (mouseX > gridWidth * cellSize || mouseX < 0) return;
-    if (mouseY > gridHeight * cellSize + topBarHeight || mouseY < topBarHeight) return;
-
-    // Don't click if game is over
-    if (gameIsOver) return;
-
-    // Calculate which cell was clicked on from mouse co-ordinates
-    var clickedOn = grid[floor(mouseX / cellSize)][floor((mouseY - topBarHeight) / cellSize)];
+    clickedOn = mouseToGridCoords();
+    clickedOn.mouseHeld = false;
 
     if (mouseButton === CENTER) {
         clickedOn.onMouseMiddle();
@@ -68,6 +66,18 @@ function mouseReleased() {
     if (mouseButton === LEFT) {
         clickedOn.onMouseLeft();
     }
+}
+
+function mouseToGridCoords() {
+    // Don't click outside of game
+    if (mouseX > gridWidth * cellSize || mouseX < 0) return;
+    if (mouseY > gridHeight * cellSize + topBarHeight || mouseY < topBarHeight) return;
+
+    // Don't click if game is over
+    if (gameIsOver) return;
+
+    // Calculate which cell was clicked on from mouse co-ordinates
+    return grid[floor(mouseX / cellSize)][floor((mouseY - topBarHeight) / cellSize)];
 }
 
 function make2DGrid(arrayWidth) {

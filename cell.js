@@ -3,6 +3,7 @@ class Cell {
     isMine = false;
     isFlagged = false;
     isRevealed = false;
+    mouseHeld = false;
     neighboringMines = 0;
 
     constructor(x, y) {
@@ -53,7 +54,11 @@ class Cell {
             }
         } else {
             // Unrevealed
-            fill(255);
+            if (this.mouseHeld) {
+                fill(200);
+            } else {
+                fill(255);
+            }
             rect(this.pxX, this.pxY, cellSize, cellSize);
             if (this.isFlagged) {
                 // Flag
@@ -92,7 +97,7 @@ class Cell {
         // Reveal neighboring tiles which are not flagged
 
         // There must be neighboring tiles to reveal
-        if ((this.neighboringMines == 0)) return;
+        if (this.neighboringMines == 0) return;
 
         // There must be the same amounts of neighboring flags and mines
         let neighboringFlags = 0;
