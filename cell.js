@@ -5,22 +5,21 @@ class Cell {
     isRevealed = false;
     neighboringMines = 0;
 
-    constructor(x, y, d) {
+    constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.d = d;
-        this.pxX = x * d;
-        this.pxY = y * d + d;
+        this.pxX = x * cellSize;
+        this.pxY = y * cellSize + cellSize;
     }
 
     show() {
         if (this.isRevealed) {
             if (this.isMine) {
                 fill("red");
-                rect(this.pxX, this.pxY, this.d, this.d);
+                rect(this.pxX, this.pxY, cellSize, cellSize);
             } else {
                 fill(175);
-                rect(this.pxX, this.pxY, this.d, this.d);
+                rect(this.pxX, this.pxY, cellSize, cellSize);
                 fill(0);
                 if (this.neighboringMines > 0) {
                     switch (this.neighboringMines) {
@@ -44,7 +43,7 @@ class Cell {
                             break;
                     }
                     textSize(20);
-                    text(this.neighboringMines, this.pxX + this.d * 0.25, this.pxY + this.d * 0.9);
+                    text(this.neighboringMines, this.pxX + cellSize * 0.25, this.pxY + cellSize * 0.9);
                 }
             }
         } else {
@@ -53,7 +52,7 @@ class Cell {
             } else {
                 fill(255);
             }
-            rect(this.pxX, this.pxY, this.d, this.d);
+            rect(this.pxX, this.pxY, cellSize, cellSize);
         }
     }
 

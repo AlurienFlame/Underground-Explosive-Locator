@@ -1,16 +1,19 @@
 // TODO: Options menu accessible to the player
-const gridWidth = 20;
-const gridHeight = 20;
-const grid = make2DGrid();
+const cellSize = 20;
+const topBarHeight = cellSize;
+const gridWidth = 40;
+const gridHeight = 30 - 1; // -1 for the top-bar
+const grid = make2DGrid(gridWidth);
+// TODO: Make numMines a percentage
 const numMines = 70;
 let move = 0;
 let gameIsOver = false;
 
 function setup() {
-    createCanvas(400, 420);
+    createCanvas(800, 600);
     // Initialize cells
     loopGrid((x, y) => {
-        grid[x][y] = new Cell(x, y, 20);
+        grid[x][y] = new Cell(x, y, cellSize);
     });
 }
 
@@ -18,8 +21,13 @@ function draw() {
     // TODO: Make this more sensitive
     // Use mouseReleased function and move functionality into cell class
     if (mouseIsPressed) {
-        // Find out if the % 20 is event neccessary
-        var clickedOn = grid[floor(mouseX / 20) % 20][floor((mouseY - 20) / 20) % 20];
+
+        // Don't click outside of game
+        if (mouseX > gridWidth * cellSize || mouseX < 0) return;
+        if (mouseY > gridHeight * cellSize + topBarHeight || mouseY < topBarHeight) return;
+
+        // FIXME: Stop using magic numbers, it's breaking it.
+        var clickedOn = grid[floor(mouseX / cellSize)][floor((mouseY - topBarHeight) / cellSize)];
 
         if (mouseButton === CENTER) {
             var canMiddleClick;
@@ -87,15 +95,15 @@ function draw() {
         grid[x][y].show();
     });
     fill(255);
-    rect(0, 0, gridWidth * 20, gridHeight);
+    rect(0, 0, gridWidth * cellSize, topBarHeight);
     fill(0);
     textSize(12);
-    text(`Moves: ${move}`, 5, gridHeight - 5);
+    text(`Moves: ${move}`, 5, topBarHeight - 5);
 }
 
-function make2DGrid() {
+function make2DGrid(arrayWidth) {
     var output = [];
-    for (let i = 0; i < gridWidth; i++) {
+    for (let i = 0; i < arrayWidth; i++) {
         output[i] = [];
     }
     return output;
@@ -130,9 +138,9 @@ function plantMines(clickedOn) {
         console.error("Trying to place more mines than spaces on the grid!");
         return;
     }
-    var realI = 0;
+    var timesLooped = 0;
     for (let i = 0; i < numMines; i++) {
-        realI++;
+        timesLooped++;
         var target = grid[floor(random(gridWidth))][floor(random(gridHeight))];
 
         // Don't place mines on mines
@@ -149,8 +157,8 @@ function plantMines(clickedOn) {
         }
 
         // Don't infinite loop
-        if (realI >= 10000) {
-            console.warn(`Could not place mine after ${realI} tries giving up.`);
+        if (timesLooped >= 10000) {
+            console.warn(`Could not place mine after ${timesLooped} tries, giving up.`);
             return;
         }
     }
