@@ -92,7 +92,7 @@ class Cell {
         // Reveal neighboring tiles which are not flagged
 
         // There must be neighboring tiles to reveal
-        if ((this.neighboringMines = 0)) return;
+        if ((this.neighboringMines == 0)) return;
 
         // There must be the same amounts of neighboring flags and mines
         let neighboringFlags = 0;
