@@ -7,6 +7,7 @@ const grid = make2DGrid(gridWidth);
 const percentageMines = 0.2;
 const numMines = percentageMines * gridWidth * gridHeight;
 let moves = 0;
+let gameHasBegun = false;
 let gameIsOver = false;
 let timerValue = 0;
 let timerDisplay = 0;
@@ -34,7 +35,9 @@ function draw() {
     text(minesRemainingText, width - 5 - textWidth(minesRemainingText), topBarHeight - 5);
 
     // Timer
-    timerValue += deltaTime;
+    if (gameHasBegun && !gameIsOver) {
+        timerValue += deltaTime;
+    }
     timerDisplay = floor(timerValue / 1000);
     if (timerDisplay > 60) {
         // Display minutes

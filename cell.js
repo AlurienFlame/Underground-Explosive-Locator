@@ -162,6 +162,7 @@ class Cell {
             loopGrid((x, y) => {
                 grid[x][y].countNeighboringMines();
             });
+            gameHasBegun = true;
         }
 
         if (this.isMine) {
