@@ -171,5 +171,6 @@ class Cell {
         }
 
         this.reveal();
+        checkWinCondition();
     }
 }

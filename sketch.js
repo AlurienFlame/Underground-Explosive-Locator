@@ -8,7 +8,7 @@ const gridWidth = 40;
 const gridHeight = 30 - 1; // -1 for the top-bar
 const grid = make2DGrid(gridWidth);
 const percentageMines = 0.2;
-const numMines = percentageMines * gridWidth * gridHeight;
+const numMines = Math.ceil(percentageMines * gridWidth * gridHeight);
 let moves;
 let gameHasBegun;
 let gameIsOver;
@@ -62,6 +62,7 @@ function mousePressed() {
 }
 
 function mouseReleased() {
+    // FIXME: releasing over a cell activates that cell, even if it's not the cell we pressed on
     loopGrid((x, y) => {
         grid[x][y].mouseHeld = false;
     });
@@ -170,15 +171,20 @@ function plantMines() {
 }
 
 function checkWinCondition() {
-    var won = true;
+    var wonByFlags = true;
+    var wonByClear = true;
     loopGrid((x, y) => {
-        // TODO: Change this so that you can win winthout flagging
-        // if !isMine && !isRevealed - all tiles must be revealed except mines
+        // You win either by flagging all mines
         if (grid[x][y].isMine && !grid[x][y].isFlagged) {
-            won = false;
+            wonByFlags = false;
+        }
+
+        // Or by revealing all non-mines
+        if (!grid[x][y].isMine && !grid[x][y].isRevealed) {
+            wonByClear = false;
         }
     });
-    if (won) {
+    if (wonByFlags || wonByClear) {
         gameOver();
         alert(`You win!\nTime: ${timerDisplay}`);
     }
