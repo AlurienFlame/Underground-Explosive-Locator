@@ -10,6 +10,7 @@ let moves = 0;
 let gameIsOver = false;
 let timerValue = 0;
 let timerDisplay = 0;
+let numFlags = 0;
 
 function setup() {
     createCanvas(800, 600);
@@ -29,6 +30,8 @@ function draw() {
     fill(0);
     textSize(12);
     text(`Moves: ${moves}`, 5, topBarHeight - 5);
+    let minesRemainingText = `Mines Remaining: ${numMines - numFlags}`
+    text(minesRemainingText, width - 5 - textWidth(minesRemainingText), topBarHeight - 5);
 
     // Timer
     timerValue += deltaTime;

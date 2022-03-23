@@ -94,6 +94,7 @@ class Cell {
     }
 
     onMouseMiddle() {
+        // TODO: color tint neighbors while button is held
         // Reveal neighboring tiles which are not flagged
 
         // There must be neighboring tiles to reveal
@@ -138,6 +139,11 @@ class Cell {
     onMouseRight() {
         // Place flag
         this.isFlagged = !this.isFlagged;
+        if (this.isFlagged) {
+            numFlags++;
+        } else {
+            numFlags--;
+        }
         if (this.isMine) {
             checkWinCondition();
         }
