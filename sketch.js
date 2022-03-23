@@ -1,3 +1,6 @@
+// Disable middle mouse scrolling
+document.body.onmousedown = function(e) { if (e.button === 1) return false; }
+
 // TODO: Options menu accessible to the player
 const cellSize = 20;
 const topBarHeight = cellSize;
@@ -6,19 +9,16 @@ const gridHeight = 30 - 1; // -1 for the top-bar
 const grid = make2DGrid(gridWidth);
 const percentageMines = 0.2;
 const numMines = percentageMines * gridWidth * gridHeight;
-let moves = 0;
-let gameHasBegun = false;
-let gameIsOver = false;
-let timerValue = 0;
-let timerDisplay = 0;
-let numFlags = 0;
+let moves;
+let gameHasBegun;
+let gameIsOver;
+let timerValue;
+let timerDisplay;
+let numFlags;
 
 function setup() {
     createCanvas(800, 600);
-    // Initialize cells
-    loopGrid((x, y) => {
-        grid[x][y] = new Cell(x, y, cellSize);
-    });
+    newGame();
 }
 
 function draw() {
@@ -31,7 +31,7 @@ function draw() {
     fill(0);
     textSize(12);
     text(`Moves: ${moves}`, 5, topBarHeight - 5);
-    let minesRemainingText = `Mines Remaining: ${numMines - numFlags}`
+    minesRemainingText = `Mines Remaining: ${numMines - numFlags}`
     text(minesRemainingText, width - 5 - textWidth(minesRemainingText), topBarHeight - 5);
 
     // Timer
@@ -50,13 +50,19 @@ function draw() {
 }
 
 function mousePressed() {
-    clickedOn = mouseToGridCoords();
+    clickedOn = cellUnderMouse();
     if (!clickedOn) return;
     clickedOn.mouseHeld = true;
 }
 
 function mouseReleased() {
-    clickedOn = mouseToGridCoords();
+    if (mouseY < topBarHeight) {
+        if (gameIsOver || confirm("Are you sure you want to restart? All progress will be lost.")) {
+            newGame();
+        }
+        return;
+    }
+    clickedOn = cellUnderMouse();
     if (!clickedOn) return;
     clickedOn.mouseHeld = false;
 
@@ -76,7 +82,7 @@ function mouseReleased() {
     }
 }
 
-function mouseToGridCoords() {
+function cellUnderMouse() {
     // Don't click outside of game
     if (mouseX > gridWidth * cellSize || mouseX < 0) return;
     if (mouseY > gridHeight * cellSize + topBarHeight || mouseY < topBarHeight) return;
@@ -172,6 +178,17 @@ function gameOver() {
     loopGrid((x, y) => {
         grid[x][y].reveal();
     });
+}
+
+function newGame() {
+    loopGrid((x, y) => {
+        grid[x][y] = new Cell(x, y, cellSize);
+    });
+    moves = 0;
+    gameHasBegun = false;
+    gameIsOver = false;
+    timerValue = 0;
+    numFlags = 0;
 }
 
 // Disable right click context menu

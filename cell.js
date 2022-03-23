@@ -167,7 +167,7 @@ class Cell {
 
         if (this.isMine) {
             gameOver();
-            alert(`You lose!\nTime: ${timerDisplay}`);
+            alert(`You lose!\nTime: ${timerDisplay}. Click the timer to restart.`);
             return;
         }
 
