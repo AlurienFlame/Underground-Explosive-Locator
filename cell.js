@@ -94,7 +94,6 @@ class Cell {
     }
 
     onMouseMiddle() {
-        // TODO: color tint neighbors while button is held
         // Reveal neighboring tiles which are not flagged
 
         // There must be neighboring tiles to reveal

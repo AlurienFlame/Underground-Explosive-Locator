@@ -53,6 +53,12 @@ function mousePressed() {
     clickedOn = cellUnderMouse();
     if (!clickedOn) return;
     clickedOn.mouseHeld = true;
+
+    if (mouseButton === CENTER) {
+        loopNeighbors(clickedOn.x, clickedOn.y, (x, y) => {
+            if (!grid[x][y].isFlagged) grid[x][y].mouseHeld = true;
+        })
+    }
 }
 
 function mouseReleased() {
