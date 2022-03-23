@@ -56,15 +56,20 @@ function mousePressed() {
 }
 
 function mouseReleased() {
+    loopGrid((x, y) => {
+        grid[x][y].mouseHeld = false;
+    });
+
+    // topbar
     if (mouseY < topBarHeight) {
         if (gameIsOver || confirm("Are you sure you want to restart? All progress will be lost.")) {
             newGame();
         }
         return;
     }
+
     clickedOn = cellUnderMouse();
     if (!clickedOn) return;
-    clickedOn.mouseHeld = false;
 
     if (mouseButton === CENTER) {
         clickedOn.onMouseMiddle();
