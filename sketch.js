@@ -15,6 +15,7 @@ let gameIsOver;
 let timerValue;
 let timerDisplay;
 let numFlags;
+let cellClicked;
 
 function setup() {
     createCanvas(800, 600);
@@ -52,6 +53,7 @@ function draw() {
 function mousePressed() {
     clickedOn = cellUnderMouse();
     if (!clickedOn) return;
+    cellClicked = clickedOn;
     clickedOn.mouseHeld = true;
 
     if (mouseButton === CENTER) {
@@ -62,7 +64,6 @@ function mousePressed() {
 }
 
 function mouseReleased() {
-    // FIXME: releasing over a cell activates that cell, even if it's not the cell we pressed on
     loopGrid((x, y) => {
         grid[x][y].mouseHeld = false;
     });
@@ -77,6 +78,7 @@ function mouseReleased() {
 
     clickedOn = cellUnderMouse();
     if (!clickedOn) return;
+    if (clickedOn != cellClicked) return;
 
     if (mouseButton === CENTER) {
         clickedOn.onMouseMiddle();
